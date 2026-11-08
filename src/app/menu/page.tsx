@@ -1,0 +1,195 @@
+import Container from "@/components/layout/Container";
+import BottomNavigation from "@/components/layout/BottomNavigation";
+
+const pilares = [
+  {
+    nome: "Alimentação",
+    icone: "🥗",
+    cor: "#25834A",
+    fundo: "#E8F4E9",
+  },
+  {
+    nome: "Atividade Física",
+    icone: "🏃",
+    cor: "#1689BD",
+    fundo: "#E5F2F9",
+  },
+  {
+    nome: "Sono",
+    icone: "🌙",
+    cor: "#6650A5",
+    fundo: "#EEEAF8",
+  },
+  {
+    nome: "Manejo do Estresse",
+    icone: "🧘",
+    cor: "#D99C00",
+    fundo: "#FBF3DC",
+  },
+  {
+    nome: "Substâncias",
+    icone: "🌱",
+    cor: "#D85A43",
+    fundo: "#FBECE8",
+  },
+  {
+    nome: "Conexões Sociais",
+    icone: "👥",
+    cor: "#15958D",
+    fundo: "#E4F3F1",
+  },
+];
+
+export default function Menu() {
+  return (
+    <Container>
+      <section className="mx-auto flex min-h-[90vh] w-full max-w-md flex-col pb-6">
+
+        {/* CABEÇALHO */}
+        <header className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-light-green text-2xl">
+              👤
+            </div>
+
+            <div>
+              <h1 className="text-xl font-bold text-primary-dark">
+                Olá, participante!
+              </h1>
+
+              <div className="mt-1 flex items-center gap-2">
+                <span className="text-xl">🌿</span>
+                <div>
+                  <p className="text-sm font-bold leading-tight text-primary-dark">
+                    Educar para Prevenir
+                  </p>
+                  <p className="text-xs text-text-gray">
+                    Medicina do Estilo de Vida
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Notificações"
+            className="relative text-2xl text-primary-dark"
+          >
+            🕭
+            <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
+          </button>
+        </header>
+
+        {/* PROGRESSO DA JORNADA */}
+        <section className="mb-8 rounded-2xl bg-gradient-to-r from-[#087A43] to-[#65B83D] p-5 text-white shadow-md">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold">
+                Sua jornada
+              </h2>
+
+              <p className="mt-2 text-sm leading-relaxed text-white/90">
+                A cada escolha saudável, você transforma sua vida.
+              </p>
+            </div>
+
+            <div
+              className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full"
+              style={{
+                background:
+                  "conic-gradient(white 60%, rgba(255,255,255,0.25) 60%)",
+              }}
+            >
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#258D4E]">
+                <span className="text-2xl font-bold">60%</span>
+              </div>
+            </div>
+
+            <div className="border-l border-white/40 pl-4">
+              <p className="text-sm">Semana</p>
+              <p className="text-2xl font-bold">3 de 12</p>
+            </div>
+          </div>
+        </section>
+
+        {/* OS SEIS PILARES */}
+        <section className="mb-8">
+          <h2 className="mb-4 text-lg font-bold text-primary-dark">
+            Os 6 Pilares da Medicina do Estilo de Vida
+          </h2>
+
+          <div className="grid grid-cols-2 gap-3">
+            {pilares.map((pilar) => (
+              <div
+                key={pilar.nome}
+                className="flex min-h-20 items-center gap-3 rounded-xl border border-medium-gray/60 bg-white p-3 shadow-sm"
+              >
+                <div
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-2xl"
+                  style={{ backgroundColor: pilar.fundo }}
+                >
+                  {pilar.icone}
+                </div>
+
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: "#073124" }}
+                >
+                  {pilar.nome}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* PRÓXIMO MÓDULO */}
+        <section className="mb-8">
+          <h2 className="mb-3 text-lg font-bold text-primary-dark">
+            Próximo módulo
+          </h2>
+
+          <div className="rounded-2xl border border-medium-gray/60 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-light-green text-4xl">
+                🥑
+
+                <span className="absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                  5
+                </span>
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-primary">
+                  Módulo 5
+                </p>
+
+                <h3 className="mt-1 font-bold text-primary-dark">
+                  Alimentação na prática
+                </h3>
+
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-light-gray">
+                  <div
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: "40%" }}
+                  />
+                </div>
+
+                <p className="mt-1 text-xs text-text-gray">
+                  40% concluído
+                </p>
+              </div>
+
+              <span className="shrink-0 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white">
+                Continuar ›
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <BottomNavigation />
+
+      </section>
+    </Container>
+  );
+}
