@@ -11,9 +11,15 @@ export default function Menu() {
         {/* CABEÇALHO */}
         <header className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-light-green text-2xl">
-              👤
-            </div>
+            
+          <Link
+            href="/perfil"
+            aria-label="Acessar meu perfil"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-light-green text-2xl transition-transform hover:scale-105"
+          >
+            👤
+          </Link>
+
 
             <div>
               <h1 className="text-xl font-bold text-primary-dark">
