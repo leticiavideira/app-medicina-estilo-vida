@@ -1,44 +1,7 @@
 import Container from "@/components/layout/Container";
 import BottomNavigation from "@/components/layout/BottomNavigation";
-
-const pilares = [
-  {
-    nome: "Alimentação",
-    icone: "🥗",
-    cor: "#25834A",
-    fundo: "#E8F4E9",
-  },
-  {
-    nome: "Atividade Física",
-    icone: "🏃",
-    cor: "#1689BD",
-    fundo: "#E5F2F9",
-  },
-  {
-    nome: "Sono",
-    icone: "🌙",
-    cor: "#6650A5",
-    fundo: "#EEEAF8",
-  },
-  {
-    nome: "Manejo do Estresse",
-    icone: "🧘",
-    cor: "#D99C00",
-    fundo: "#FBF3DC",
-  },
-  {
-    nome: "Substâncias",
-    icone: "🌱",
-    cor: "#D85A43",
-    fundo: "#FBECE8",
-  },
-  {
-    nome: "Conexões Sociais",
-    icone: "👥",
-    cor: "#15958D",
-    fundo: "#E4F3F1",
-  },
-];
+import Link from "next/link";
+import { pilares } from "@/data/pilares";
 
 export default function Menu() {
   return (
@@ -121,9 +84,10 @@ export default function Menu() {
 
           <div className="grid grid-cols-2 gap-3">
             {pilares.map((pilar) => (
-              <div
-                key={pilar.nome}
-                className="flex min-h-20 items-center gap-3 rounded-xl border border-medium-gray/60 bg-white p-3 shadow-sm"
+              <Link
+                key={pilar.slug}
+                href={`/pilares/${pilar.slug}`}
+                className="flex min-h-20 items-center gap-3 rounded-xl border border-medium-gray/60 bg-white p-3 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md"
               >
                 <div
                   className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-2xl"
@@ -138,7 +102,7 @@ export default function Menu() {
                 >
                   {pilar.nome}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
