@@ -8,6 +8,8 @@ import VideoDia from "@/components/modulos/VideoDia";
 import { buscarModulo } from "@/data/modulos";
 import { modulo1Conteudo } from "@/data/modulos/modulo-1";
 
+import QuizDia from "@/components/modulos/QuizDia";
+
 type DiaPageProps = {
   params: Promise<{
     slug: string;
@@ -37,6 +39,16 @@ export default async function DiaPage({ params }: DiaPageProps) {
         <VideoDia video={modulo1Conteudo.video} slug={slug} />
         <BottomNavigation />
       </Container>
+    );
+  }
+
+    // Dia 6: quiz dos seis pilares
+  if (numeroDia === 6 && modulo1Conteudo.quiz) {
+    return (
+        <Container>
+        <QuizDia quiz={modulo1Conteudo.quiz} slug={slug} />
+        <BottomNavigation />
+        </Container>
     );
   }
 
