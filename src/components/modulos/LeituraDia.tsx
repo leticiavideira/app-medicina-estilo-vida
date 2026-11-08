@@ -59,6 +59,33 @@ export default function LeituraDia({ dia, slug }: LeituraDiaProps) {
         )}
 
     </div>
+    <div className="mt-6 flex items-center gap-3">
+        {dia.numero > 1 && (
+            <Link
+            href={`/modulos/${slug}/dia/${dia.numero - 1}`}
+            className="flex-1 rounded-xl border border-[#D8E5DC] bg-white py-3.5 text-center text-sm font-semibold text-[#176B48] transition hover:bg-[#EAF4ED]"
+            >
+            Dia anterior
+            </Link>
+        )}
+
+        {dia.numero < 4 ? (
+            <Link
+            href={`/modulos/${slug}/dia/${dia.numero + 1}`}
+            className="flex-1 rounded-xl bg-[#16834E] py-3.5 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
+            >
+            Próximo dia
+            </Link>
+        ) : (
+            <Link
+                href={`/modulos/${slug}/dia/5`}
+                className="flex-1 rounded-xl bg-[#16834E] py-3.5 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
+            >
+                Próxima etapa
+            </Link>
+        )}
+    </div>
+
     </main>
   );
 }
