@@ -9,10 +9,12 @@ type LeituraDiaProps = {
 };
 
 export default function LeituraDia({ dia, slug }: LeituraDiaProps) {
-  // Os módulos 7 e 8 possuem sete dias de leitura.
+  // Os módulos 7, 8 e 9 possuem sete dias de leitura.
   // Os módulos anteriores possuem quatro dias de leitura.
   const possuiSeteDiasLeitura =
-    slug === "modulo-7" || slug === "modulo-8";
+    slug === "modulo-7" ||
+    slug === "modulo-8" ||
+    slug === "modulo-9";
 
   const ultimoDiaLeitura = possuiSeteDiasLeitura ? 7 : 4;
 

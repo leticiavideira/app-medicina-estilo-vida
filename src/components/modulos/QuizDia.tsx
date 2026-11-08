@@ -12,19 +12,22 @@ type QuizDiaProps = {
 };
 
 export default function QuizDia({ quiz, slug }: QuizDiaProps) {
-  const ehModulo7Ou8 = slug === "modulo-7" || slug === "modulo-8";
-  const ehModulo8 = slug === "modulo-8";
+  // Módulos 7, 8 e 9 possuem quiz no dia 8 e triagem no dia 9.
+  const possuiFluxoDeSeteDias =
+    slug === "modulo-7" ||
+    slug === "modulo-8" ||
+    slug === "modulo-9";
 
-  const numeroDia = ehModulo7Ou8 ? 8 : 6;
-  const diaAnterior = ehModulo7Ou8 ? 7 : 5;
-  const proximaEtapa = ehModulo7Ou8 ? 9 : 7;
+  const numeroDia = possuiFluxoDeSeteDias ? 8 : 6;
+  const diaAnterior = possuiFluxoDeSeteDias ? 7 : 5;
+  const proximaEtapa = possuiFluxoDeSeteDias ? 9 : 7;
 
   const [questoes, setQuestoes] = useState<QuestaoQuiz[]>(
     quiz.questoes
   );
 
   const [sorteioConcluido, setSorteioConcluido] = useState(
-    !ehModulo7Ou8
+    !possuiFluxoDeSeteDias
   );
 
   const [indiceQuestao, setIndiceQuestao] = useState(0);
@@ -35,9 +38,9 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
   const [acertos, setAcertos] = useState(0);
   const [finalizado, setFinalizado] = useState(false);
 
-  // Sorteia uma das três versões equiprováveis nos módulos 7 e 8.
+  // Sorteia uma das três versões equiprováveis nos módulos 7, 8 e 9.
   useEffect(() => {
-    if (!ehModulo7Ou8 || !quiz.versoes) {
+    if (!possuiFluxoDeSeteDias || !quiz.versoes) {
       setQuestoes(quiz.questoes);
       setSorteioConcluido(true);
       return;
@@ -66,7 +69,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
 
     setQuestoes(versoesDisponiveis[indiceSorteado]);
     setSorteioConcluido(true);
-  }, [ehModulo7Ou8, quiz]);
+  }, [possuiFluxoDeSeteDias, quiz]);
 
   const questao = questoes[indiceQuestao];
 
@@ -206,7 +209,9 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
           href={`/modulos/${slug}/dia/${proximaEtapa}`}
           className="mt-6 block w-full rounded-xl bg-[#16834E] py-4 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
         >
-          {ehModulo7Ou8 ? "Ir para a triagem" : "Ir para a próxima etapa"}
+          {possuiFluxoDeSeteDias
+            ? "Ir para a triagem"
+            : "Ir para a próxima etapa"}
         </Link>
       </main>
     );
@@ -219,7 +224,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-[#176B48]"
       >
         <span aria-hidden="true">←</span>
-        {ehModulo7Ou8 ? "Voltar à leitura" : "Voltar ao vídeo"}
+        {possuiFluxoDeSeteDias ? "Voltar à leitura" : "Voltar ao vídeo"}
       </Link>
 
       <div className="mb-5">

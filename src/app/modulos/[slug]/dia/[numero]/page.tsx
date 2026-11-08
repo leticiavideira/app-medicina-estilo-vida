@@ -8,9 +8,12 @@ import LeituraDia from "@/components/modulos/LeituraDia";
 import VideoDia from "@/components/modulos/VideoDia";
 import QuizDia from "@/components/modulos/QuizDia";
 import TriagemDia from "@/components/modulos/TriagemDia";
+import TriagemAssistDia from "@/components/modulos/TriagemAssistDia";
 
 import { buscarModulo } from "@/data/modulos";
 import { buscarConteudoModulo } from "@/data/conteudoModulos";
+
+import type { AssistModulo } from "@/types/conteudoModulo";
 
 type DiaPageProps = {
   params: Promise<{ slug: string; numero: string }>;
@@ -31,9 +34,11 @@ export default async function DiaPage({ params }: DiaPageProps) {
     notFound();
   }
 
-  // Módulos 7 e 8: leitura -> quiz -> triagem.
+  // Módulos 7, 8 e 9: sete dias de leitura -> quiz -> triagem.
   const fluxoLeituraQuizTriagem =
-    slug === "modulo-7" || slug === "modulo-8";
+    slug === "modulo-7" ||
+    slug === "modulo-8" ||
+    slug === "modulo-9";
 
   if (fluxoLeituraQuizTriagem) {
     // Dia 8: Quiz.
@@ -47,13 +52,34 @@ export default async function DiaPage({ params }: DiaPageProps) {
     }
 
     // Dia 9: Triagem.
-    if (numeroDia === 9 && conteudo.triagem) {
-      return (
-        <Container>
-          <TriagemDia triagem={conteudo.triagem} slug={slug} />
-          <BottomNavigation />
-        </Container>
-      );
+    if (numeroDia === 9) {
+      // Módulo 9 utiliza a triagem ASSIST.
+      if (slug === "modulo-9") {
+        const assist = (
+          conteudo as unknown as { assist?: AssistModulo }
+        ).assist;
+
+        if (!assist) notFound();
+
+        return (
+          <Container>
+            <TriagemAssistDia assist={assist} slug={slug} />
+            <BottomNavigation />
+          </Container>
+        );
+      }
+
+      // Módulos 7 e 8 utilizam a triagem convencional.
+      if (conteudo.triagem) {
+        return (
+          <Container>
+            <TriagemDia triagem={conteudo.triagem} slug={slug} />
+            <BottomNavigation />
+          </Container>
+        );
+      }
+
+      notFound();
     }
 
     // Dias 1 a 7: Leituras.

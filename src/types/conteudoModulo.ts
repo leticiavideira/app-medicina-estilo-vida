@@ -31,7 +31,6 @@ export type QuestaoQuiz = {
   feedback: string;
 };
 
-// Permite manter as três versões de um mesmo quiz.
 export type VersoesQuiz = {
   original: QuestaoQuiz[];
   A: QuestaoQuiz[];
@@ -56,19 +55,16 @@ export type VideoModulo = {
   recompensaMicropraticaXP?: number;
 };
 
-// Alternativas com pontuação para instrumentos de triagem.
 export type OpcaoTriagem = {
   valor: number;
   texto: string;
 };
 
-// Item individual de um instrumento estruturado.
 export type ItemTriagem = {
   enunciado: string;
   alternativas: OpcaoTriagem[];
 };
 
-// Faixas de interpretação de um instrumento.
 export type FaixaInterpretacao = {
   minimo: number;
   maximo: number;
@@ -76,7 +72,6 @@ export type FaixaInterpretacao = {
   descricao: string;
 };
 
-// Configuração específica para instrumentos com pontuação.
 export type InstrumentoTriagem = {
   nome: string;
   instrucoes: string;
@@ -85,11 +80,6 @@ export type InstrumentoTriagem = {
   pontuacaoMinima: number;
   pontuacaoMaxima: number;
   faixas: FaixaInterpretacao[];
-  /**
-   * Números dos itens cuja pontuação deve ser invertida.
-   * A numeração começa em 1.
-   * Exemplo: [4, 5, 7, 8].
-   */
   itensInvertidos?: number[];
   alertaSeguranca?: string;
   limiteAlerta?: number;
@@ -105,12 +95,49 @@ export type TriagemModulo = {
   recompensaDevolutivaXP: number;
 };
 
+// Tipos específicos da triagem ASSIST-OMS (Módulo 9).
+
+export type SubstanciaAssist = {
+  id: string;
+  nome: string;
+};
+
+export type OpcaoAssist = {
+  valor: number;
+  texto: string;
+};
+
+export type QuestaoAssist = {
+  numero: 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  titulo: string;
+  enunciado: string;
+  alternativas: OpcaoAssist[];
+};
+
+export type AssistModulo = {
+  titulo: string;
+  introducao: string[];
+  substancias: SubstanciaAssist[];
+  perguntaUsoNaVida: string;
+  questoes: QuestaoAssist[];
+  mensagemSeguranca: string;
+  devolutivas: {
+    baixo: string;
+    moderado: string;
+    alto: string;
+  };
+  mensagemFinal: string;
+  recompensaConclusaoXP: number;
+  recompensaDevolutivaXP: number;
+};
+
 export type ConteudoModulo = {
   introducao: string[];
   dias: ConteudoDia[];
   video?: VideoModulo;
   quiz?: QuizModulo;
   triagem?: TriagemModulo;
+  assist?: AssistModulo;
   fechamentoLeitura?: {
     paragrafos: string[];
     fraseDestaque?: string;
