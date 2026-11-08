@@ -44,11 +44,13 @@ export type VideoModulo = {
   descricao: string[];
   url?: string;
   recompensaXP?: number;
+  recompensaMicropraticaXP?: number;
 };
 
 export type TriagemModulo = {
   titulo: string;
   introducao: string[];
+  perguntas?: string[];
   recompensaConclusaoXP: number;
   recompensaDevolutivaXP: number;
 };
