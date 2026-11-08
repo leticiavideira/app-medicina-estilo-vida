@@ -25,13 +25,13 @@ export default function Home() {
   }
 
   function handleContinuar() {
-  if (cpf.replace(/\D/g, "").length !== 11) {
-    setMensagem("Digite um CPF válido.");
-    return;
-  }
+    if (cpf.replace(/\D/g, "").length !== 11) {
+      setMensagem("Digite um CPF válido.");
+      return;
+    }
 
-  router.push("/termos");
-}
+    router.push("/termos");
+  }
 
   return (
     <Container>
