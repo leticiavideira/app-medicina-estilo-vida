@@ -45,7 +45,7 @@ export default async function ModuloPage({
           </h1>
 
           <p className="mt-2 text-sm text-text-gray">
-            Semana {modulo.semana}
+            Módulo {modulo.numero} - Semana {modulo.semana}
           </p>
         </div>
 

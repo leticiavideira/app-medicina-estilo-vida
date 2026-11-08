@@ -35,7 +35,7 @@ export default function Modulos() {
                 </h2>
 
                 <p className="mt-1 text-sm text-text-gray">
-                  Semana {modulo.semana}
+                  Módulo {modulo.numero}
                 </p>
               </div>
 
