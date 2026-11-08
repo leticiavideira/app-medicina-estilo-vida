@@ -1,3 +1,4 @@
+
 export type OpcaoAtividade = {
   valor: number;
   texto: string;
@@ -30,10 +31,18 @@ export type QuestaoQuiz = {
   feedback: string;
 };
 
+// Permite manter as três versões de um mesmo quiz.
+export type VersoesQuiz = {
+  original: QuestaoQuiz[];
+  A: QuestaoQuiz[];
+  B: QuestaoQuiz[];
+};
+
 export type QuizModulo = {
   titulo: string;
   introducao: string;
   questoes: QuestaoQuiz[];
+  versoes?: VersoesQuiz;
   recompensaConclusaoXP: number;
   recompensaBonusXP: number;
   minimoAcertosBonus: number;
@@ -47,10 +56,45 @@ export type VideoModulo = {
   recompensaMicropraticaXP?: number;
 };
 
+// Alternativas com pontuação para instrumentos de triagem.
+export type OpcaoTriagem = {
+  valor: number;
+  texto: string;
+};
+
+// Item individual de um instrumento estruturado.
+export type ItemTriagem = {
+  enunciado: string;
+  alternativas: OpcaoTriagem[];
+};
+
+// Faixas de interpretação de um instrumento.
+export type FaixaInterpretacao = {
+  minimo: number;
+  maximo: number;
+  classificacao: string;
+  descricao: string;
+};
+
+// Configuração específica para instrumentos com pontuação.
+export type InstrumentoTriagem = {
+  nome: string;
+  instrucoes: string;
+  periodoReferencia?: string;
+  itens: ItemTriagem[];
+  pontuacaoMinima: number;
+  pontuacaoMaxima: number;
+  faixas: FaixaInterpretacao[];
+  alertaSeguranca?: string;
+  limiteAlerta?: number;
+  mensagemAlerta?: string;
+};
+
 export type TriagemModulo = {
   titulo: string;
   introducao: string[];
   perguntas?: string[];
+  instrumento?: InstrumentoTriagem;
   recompensaConclusaoXP: number;
   recompensaDevolutivaXP: number;
 };
