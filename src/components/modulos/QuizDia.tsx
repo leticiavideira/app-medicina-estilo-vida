@@ -12,31 +12,51 @@ type QuizDiaProps = {
 };
 
 export default function QuizDia({ quiz, slug }: QuizDiaProps) {
-  const ehModulo7 = slug === "modulo-7";
+  const ehModulo7Ou8 = slug === "modulo-7" || slug === "modulo-8";
+  const ehModulo8 = slug === "modulo-8";
 
-  // Define os dias de acordo com a estrutura de cada módulo.
-  const numeroDia = ehModulo7 ? 8 : 6;
-  const diaAnterior = ehModulo7 ? 7 : 5;
-  const proximaEtapa = ehModulo7 ? 9 : 7;
+  const numeroDia = ehModulo7Ou8 ? 8 : 6;
+  const diaAnterior = ehModulo7Ou8 ? 7 : 5;
+  const proximaEtapa = ehModulo7Ou8 ? 9 : 7;
 
-  // No Módulo 7, as questões são sorteadas entre Original, A e B.
-  // O sorteio acontece após a montagem para evitar divergência na hidratação.
-  const [questoes, setQuestoes] = useState<QuestaoQuiz[]>(quiz.questoes);
+  const [questoes, setQuestoes] = useState<QuestaoQuiz[]>(
+    quiz.questoes
+  );
 
+  const [sorteioConcluido, setSorteioConcluido] = useState(
+    !ehModulo7Ou8
+  );
+
+  const [indiceQuestao, setIndiceQuestao] = useState(0);
+  const [respostaSelecionada, setRespostaSelecionada] = useState<
+    string | null
+  >(null);
+  const [respostaConfirmada, setRespostaConfirmada] = useState(false);
+  const [acertos, setAcertos] = useState(0);
+  const [finalizado, setFinalizado] = useState(false);
+
+  // Sorteia uma das três versões equiprováveis nos módulos 7 e 8.
   useEffect(() => {
-    if (!ehModulo7 || !quiz.versoes) {
+    if (!ehModulo7Ou8 || !quiz.versoes) {
       setQuestoes(quiz.questoes);
+      setSorteioConcluido(true);
       return;
     }
 
+    const versaoOriginal =
+      quiz.versoes.original.length > 0
+        ? quiz.versoes.original
+        : quiz.questoes;
+
     const versoesDisponiveis = [
-      quiz.questoes,
+      versaoOriginal,
       quiz.versoes.A,
       quiz.versoes.B,
     ].filter((versao) => versao.length > 0);
 
     if (versoesDisponiveis.length === 0) {
       setQuestoes(quiz.questoes);
+      setSorteioConcluido(true);
       return;
     }
 
@@ -45,15 +65,8 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
     );
 
     setQuestoes(versoesDisponiveis[indiceSorteado]);
-  }, [ehModulo7, quiz]);
-
-  const [indiceQuestao, setIndiceQuestao] = useState(0);
-  const [respostaSelecionada, setRespostaSelecionada] = useState<string | null>(
-    null
-  );
-  const [respostaConfirmada, setRespostaConfirmada] = useState(false);
-  const [acertos, setAcertos] = useState(0);
-  const [finalizado, setFinalizado] = useState(false);
+    setSorteioConcluido(true);
+  }, [ehModulo7Ou8, quiz]);
 
   const questao = questoes[indiceQuestao];
 
@@ -74,7 +87,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
     quiz.recompensaBonusXP > 0;
 
   function confirmarResposta() {
-    if (respostaSelecionada === null || respostaConfirmada) {
+    if (respostaSelecionada === null || respostaConfirmada || !questao) {
       return;
     }
 
@@ -96,7 +109,16 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
     setRespostaConfirmada(false);
   }
 
-  // Evita renderizar o quiz antes de haver questões disponíveis.
+  if (!sorteioConcluido) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center bg-[#F7FAF7] px-5">
+        <p className="text-center text-sm text-[#65756C]">
+          Preparando seu quiz...
+        </p>
+      </main>
+    );
+  }
+
   if (questoes.length === 0 || !questao) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center bg-[#F7FAF7] px-5">
@@ -130,6 +152,14 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
             <p className="mt-3 text-sm leading-6 text-[#65756C]">
               Você acertou {acertos} de {questoes.length} questões.
             </p>
+
+            {!possuiRecompensas && (
+              <p className="mt-4 text-sm leading-6 text-[#65756C]">
+                Você concluiu a revisão dos principais conceitos do módulo.
+                O objetivo desta etapa é consolidar o aprendizado, não
+                avaliar ou comparar seu desempenho.
+              </p>
+            )}
 
             {possuiRecompensas && (
               <div className="mt-6 rounded-xl bg-[#EAF4ED] p-4">
@@ -176,7 +206,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
           href={`/modulos/${slug}/dia/${proximaEtapa}`}
           className="mt-6 block w-full rounded-xl bg-[#16834E] py-4 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
         >
-          Ir para a próxima etapa
+          {ehModulo7Ou8 ? "Ir para a triagem" : "Ir para a próxima etapa"}
         </Link>
       </main>
     );
@@ -189,7 +219,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-[#176B48]"
       >
         <span aria-hidden="true">←</span>
-        {ehModulo7 ? "Voltar à leitura" : "Voltar ao vídeo"}
+        {ehModulo7Ou8 ? "Voltar à leitura" : "Voltar ao vídeo"}
       </Link>
 
       <div className="mb-5">

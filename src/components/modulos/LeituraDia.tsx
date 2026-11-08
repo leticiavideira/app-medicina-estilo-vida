@@ -9,17 +9,20 @@ type LeituraDiaProps = {
 };
 
 export default function LeituraDia({ dia, slug }: LeituraDiaProps) {
-  // O módulo 7 possui sete dias de leitura.
+  // Os módulos 7 e 8 possuem sete dias de leitura.
   // Os módulos anteriores possuem quatro dias de leitura.
-  const ultimoDiaLeitura = slug === "modulo-7" ? 7 : 4;
+  const possuiSeteDiasLeitura =
+    slug === "modulo-7" || slug === "modulo-8";
+
+  const ultimoDiaLeitura = possuiSeteDiasLeitura ? 7 : 4;
 
   const proximoDia = dia.numero + 1;
   const diaAnterior = dia.numero - 1;
 
   const temProximoDia = dia.numero < ultimoDiaLeitura;
 
-  // Depois da última leitura, segue para a próxima etapa.
-  const proximaEtapa = slug === "modulo-7" ? 8 : 5;
+  // Depois da última leitura, segue para o quiz.
+  const proximaEtapa = possuiSeteDiasLeitura ? 8 : 5;
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-[#F7FAF7] px-5 pb-8 pt-6">

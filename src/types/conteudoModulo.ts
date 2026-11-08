@@ -85,6 +85,12 @@ export type InstrumentoTriagem = {
   pontuacaoMinima: number;
   pontuacaoMaxima: number;
   faixas: FaixaInterpretacao[];
+  /**
+   * Números dos itens cuja pontuação deve ser invertida.
+   * A numeração começa em 1.
+   * Exemplo: [4, 5, 7, 8].
+   */
+  itensInvertidos?: number[];
   alertaSeguranca?: string;
   limiteAlerta?: number;
   mensagemAlerta?: string;

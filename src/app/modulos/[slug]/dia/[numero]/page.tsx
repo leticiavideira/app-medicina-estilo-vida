@@ -31,8 +31,11 @@ export default async function DiaPage({ params }: DiaPageProps) {
     notFound();
   }
 
-  // Fluxo específico do módulo 7.
-  if (slug === "modulo-7") {
+  // Módulos 7 e 8: leitura -> quiz -> triagem.
+  const fluxoLeituraQuizTriagem =
+    slug === "modulo-7" || slug === "modulo-8";
+
+  if (fluxoLeituraQuizTriagem) {
     // Dia 8: Quiz.
     if (numeroDia === 8 && conteudo.quiz) {
       return (
