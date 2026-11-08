@@ -1,5 +1,12 @@
 
-export const modulos = [
+export type ModuloResumo = {
+  slug: string;
+  numero: number;
+  nome: string;
+  semana: number;
+};
+
+export const modulos: ModuloResumo[] = [
   {
     slug: "modulo-1",
     numero: 1,
@@ -91,3 +98,7 @@ export const modulos = [
     semana: 15,
   },
 ];
+
+export function buscarModulo(slug: string): ModuloResumo | undefined {
+  return modulos.find((modulo) => modulo.slug === slug);
+}
