@@ -128,7 +128,10 @@ export default function Menu() {
             Próximo módulo
           </h2>
 
-          <div className="rounded-2xl border border-medium-gray/60 bg-white p-4 shadow-sm">
+          <Link
+            href="/modulos"
+            className="block rounded-2xl border border-medium-gray/60 bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+          >
             <div className="flex items-center gap-3">
               <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-light-green text-4xl">
                 🥑
@@ -163,7 +166,7 @@ export default function Menu() {
                 Continuar ›
               </span>
             </div>
-          </div>
+          </Link>
         </section>
 
         <BottomNavigation />
