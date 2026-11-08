@@ -33,15 +33,30 @@ export default function Menu() {
               </div>
             </div>
           </div>
-
-          <button
-            type="button"
-            aria-label="Notificações"
-            className="relative text-2xl text-primary-dark"
+  
+          <Link
+            href="/notificacoes"
+            aria-label="Abrir notificações"
+            className="relative flex h-11 w-11 items-center justify-center rounded-full text-primary-dark transition-colors hover:bg-light-green"
           >
-            🕭
-            <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary" />
-          </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+              <path d="M10 21h4" />
+            </svg>
+
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
+          </Link>
+
         </header>
 
         {/* PROGRESSO DA JORNADA */}
