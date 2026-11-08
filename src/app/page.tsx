@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Container from "@/components/layout/Container";
 import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [cpf, setCpf] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const router = useRouter();
 
   function formatarCPF(valor: string) {
     const numeros = valor.replace(/\D/g, "").slice(0, 11);
@@ -23,13 +25,13 @@ export default function Home() {
   }
 
   function handleContinuar() {
-    if (cpf.replace(/\D/g, "").length !== 11) {
-      setMensagem("Digite um CPF válido.");
-      return;
-    }
-
-    setMensagem("CPF informado. Consulta ainda não implementada.");
+  if (cpf.replace(/\D/g, "").length !== 11) {
+    setMensagem("Digite um CPF válido.");
+    return;
   }
+
+  router.push("/termos");
+}
 
   return (
     <Container>
