@@ -1,3 +1,4 @@
+
 import { notFound } from "next/navigation";
 
 import Container from "@/components/layout/Container";
@@ -25,8 +26,49 @@ export default async function DiaPage({ params }: DiaPageProps) {
   if (!conteudo) notFound();
 
   const numeroDia = Number(numero);
-  if (!Number.isInteger(numeroDia)) notFound();
 
+  if (!Number.isInteger(numeroDia) || numeroDia < 1) {
+    notFound();
+  }
+
+  // Fluxo específico do módulo 7.
+  if (slug === "modulo-7") {
+    // Dia 8: Quiz.
+    if (numeroDia === 8 && conteudo.quiz) {
+      return (
+        <Container>
+          <QuizDia quiz={conteudo.quiz} slug={slug} />
+          <BottomNavigation />
+        </Container>
+      );
+    }
+
+    // Dia 9: Triagem.
+    if (numeroDia === 9 && conteudo.triagem) {
+      return (
+        <Container>
+          <TriagemDia triagem={conteudo.triagem} slug={slug} />
+          <BottomNavigation />
+        </Container>
+      );
+    }
+
+    // Dias 1 a 7: Leituras.
+    const dia = conteudo.dias.find(
+      (item) => item.numero === numeroDia
+    );
+
+    if (!dia) notFound();
+
+    return (
+      <Container>
+        <LeituraDia dia={dia} slug={slug} />
+        <BottomNavigation />
+      </Container>
+    );
+  }
+
+  // Fluxo original dos módulos 1 a 6.
   if (numeroDia === 5 && conteudo.video) {
     return (
       <Container>

@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import type { ConteudoDia } from "@/types/conteudoModulo";
 import AtividadeDia from "@/components/modulos/AtividadeDia";
@@ -8,6 +9,18 @@ type LeituraDiaProps = {
 };
 
 export default function LeituraDia({ dia, slug }: LeituraDiaProps) {
+  // O módulo 7 possui sete dias de leitura.
+  // Os módulos anteriores possuem quatro dias de leitura.
+  const ultimoDiaLeitura = slug === "modulo-7" ? 7 : 4;
+
+  const proximoDia = dia.numero + 1;
+  const diaAnterior = dia.numero - 1;
+
+  const temProximoDia = dia.numero < ultimoDiaLeitura;
+
+  // Depois da última leitura, segue para a próxima etapa.
+  const proximaEtapa = slug === "modulo-7" ? 8 : 5;
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-[#F7FAF7] px-5 pb-8 pt-6">
       <Link
@@ -30,62 +43,56 @@ export default function LeituraDia({ dia, slug }: LeituraDiaProps) {
         <div className="mt-4 flex items-center gap-2 text-sm text-[#65756C]">
           <span aria-hidden="true">📖</span>
           <span>Leitura</span>
-          <span className="ml-auto font-semibold text-[#16834E]">
-            +{dia.recompensaLeituraXP} XP
-          </span>
+
+          {dia.recompensaLeituraXP > 0 && (
+            <span className="ml-auto font-semibold text-[#16834E]">
+              +{dia.recompensaLeituraXP} XP
+            </span>
+          )}
         </div>
       </div>
 
-    <div className="max-h-[55vh] space-y-5 overflow-y-auto">
-
+      <div className="max-h-[55vh] space-y-5 overflow-y-auto">
         <article className="rounded-2xl border border-[#E4EBE5] bg-white p-5 shadow-sm">
-            <div className="space-y-4 text-sm leading-7 text-[#344B3D]">
+          <div className="space-y-4 text-sm leading-7 text-[#344B3D]">
             {dia.paragrafos.map((paragrafo, index) => (
-                <p key={index}>{paragrafo}</p>
+              <p key={index}>{paragrafo}</p>
             ))}
-            </div>
+          </div>
 
-            {dia.fraseDestaque && (
+          {dia.fraseDestaque && (
             <div className="mt-6 rounded-xl border-l-4 border-[#16834E] bg-[#EAF4ED] p-4">
-                <p className="text-sm font-semibold italic leading-relaxed text-[#176B48]">
+              <p className="text-sm font-semibold italic leading-relaxed text-[#176B48]">
                 {dia.fraseDestaque}
-                </p>
+              </p>
             </div>
-            )}
+          )}
         </article>
 
         {dia.atividade && (
-            <AtividadeDia atividade={dia.atividade} />
+          <AtividadeDia atividade={dia.atividade} />
         )}
+      </div>
 
-    </div>
-    <div className="mt-6 flex items-center gap-3">
+      <div className="mt-6 flex items-center gap-3">
         {dia.numero > 1 && (
-            <Link
-            href={`/modulos/${slug}/dia/${dia.numero - 1}`}
+          <Link
+            href={`/modulos/${slug}/dia/${diaAnterior}`}
             className="flex-1 rounded-xl border border-[#D8E5DC] bg-white py-3.5 text-center text-sm font-semibold text-[#176B48] transition hover:bg-[#EAF4ED]"
-            >
+          >
             Dia anterior
-            </Link>
+          </Link>
         )}
 
-        {dia.numero < 4 ? (
-            <Link
-            href={`/modulos/${slug}/dia/${dia.numero + 1}`}
-            className="flex-1 rounded-xl bg-[#16834E] py-3.5 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
-            >
-            Próximo dia
-            </Link>
-        ) : (
-            <Link
-                href={`/modulos/${slug}/dia/5`}
-                className="flex-1 rounded-xl bg-[#16834E] py-3.5 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
-            >
-                Próxima etapa
-            </Link>
-        )}
-    </div>
-
+        <Link
+          href={`/modulos/${slug}/dia/${
+            temProximoDia ? proximoDia : proximaEtapa
+          }`}
+          className="flex-1 rounded-xl bg-[#16834E] py-3.5 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
+        >
+          {temProximoDia ? "Próximo dia" : "Próxima etapa"}
+        </Link>
+      </div>
     </main>
   );
 }

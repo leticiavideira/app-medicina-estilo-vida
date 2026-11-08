@@ -6,6 +6,8 @@ import { modulo3Conteudo } from "@/data/modulos/modulo-3";
 import { modulo4Conteudo } from "@/data/modulos/modulo-4";
 import { modulo5Conteudo } from "@/data/modulos/modulo-5";
 import { modulo6Conteudo } from "@/data/modulos/modulo-6";
+import { modulo7Conteudo } from "@/data/modulos/modulo-7";
+
 
 const conteudos: Record<string, ConteudoModulo> = {
   "modulo-1": modulo1Conteudo,
@@ -14,6 +16,7 @@ const conteudos: Record<string, ConteudoModulo> = {
   "modulo-4": modulo4Conteudo,
   "modulo-5": modulo5Conteudo,
   "modulo-6": modulo6Conteudo,
+  "modulo-7": modulo7Conteudo,
 };
 
 export function buscarConteudoModulo(

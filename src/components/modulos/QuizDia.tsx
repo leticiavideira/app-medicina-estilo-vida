@@ -1,9 +1,10 @@
+
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import type { QuizModulo } from "@/types/conteudoModulo";
+import type { QuestaoQuiz, QuizModulo } from "@/types/conteudoModulo";
 
 type QuizDiaProps = {
   quiz: QuizModulo;
@@ -11,6 +12,41 @@ type QuizDiaProps = {
 };
 
 export default function QuizDia({ quiz, slug }: QuizDiaProps) {
+  const ehModulo7 = slug === "modulo-7";
+
+  // Define os dias de acordo com a estrutura de cada módulo.
+  const numeroDia = ehModulo7 ? 8 : 6;
+  const diaAnterior = ehModulo7 ? 7 : 5;
+  const proximaEtapa = ehModulo7 ? 9 : 7;
+
+  // No Módulo 7, as questões são sorteadas entre Original, A e B.
+  // O sorteio acontece após a montagem para evitar divergência na hidratação.
+  const [questoes, setQuestoes] = useState<QuestaoQuiz[]>(quiz.questoes);
+
+  useEffect(() => {
+    if (!ehModulo7 || !quiz.versoes) {
+      setQuestoes(quiz.questoes);
+      return;
+    }
+
+    const versoesDisponiveis = [
+      quiz.questoes,
+      quiz.versoes.A,
+      quiz.versoes.B,
+    ].filter((versao) => versao.length > 0);
+
+    if (versoesDisponiveis.length === 0) {
+      setQuestoes(quiz.questoes);
+      return;
+    }
+
+    const indiceSorteado = Math.floor(
+      Math.random() * versoesDisponiveis.length
+    );
+
+    setQuestoes(versoesDisponiveis[indiceSorteado]);
+  }, [ehModulo7, quiz]);
+
   const [indiceQuestao, setIndiceQuestao] = useState(0);
   const [respostaSelecionada, setRespostaSelecionada] = useState<string | null>(
     null
@@ -19,13 +55,23 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
   const [acertos, setAcertos] = useState(0);
   const [finalizado, setFinalizado] = useState(false);
 
-  const questao = quiz.questoes[indiceQuestao];
+  const questao = questoes[indiceQuestao];
 
-  const alternativaCorreta = questao.alternativas.find(
+  const alternativaCorreta = questao?.alternativas.find(
     (alternativa) => alternativa.letra === questao.respostaCorreta
   );
 
-  const bonusConquistado = acertos >= quiz.minimoAcertosBonus;
+  const bonusConquistado =
+    quiz.recompensaBonusXP > 0 &&
+    acertos >= quiz.minimoAcertosBonus;
+
+  const totalXP =
+    quiz.recompensaConclusaoXP +
+    (bonusConquistado ? quiz.recompensaBonusXP : 0);
+
+  const possuiRecompensas =
+    quiz.recompensaConclusaoXP > 0 ||
+    quiz.recompensaBonusXP > 0;
 
   function confirmarResposta() {
     if (respostaSelecionada === null || respostaConfirmada) {
@@ -40,7 +86,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
   }
 
   function avancarQuestao() {
-    if (indiceQuestao === quiz.questoes.length - 1) {
+    if (indiceQuestao === questoes.length - 1) {
       setFinalizado(true);
       return;
     }
@@ -50,11 +96,25 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
     setRespostaConfirmada(false);
   }
 
-  if (finalizado) {
-    const totalXP =
-      quiz.recompensaConclusaoXP +
-      (bonusConquistado ? quiz.recompensaBonusXP : 0);
+  // Evita renderizar o quiz antes de haver questões disponíveis.
+  if (questoes.length === 0 || !questao) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center bg-[#F7FAF7] px-5">
+        <p className="text-center text-sm text-[#65756C]">
+          Não foi possível carregar as questões deste quiz.
+        </p>
 
+        <Link
+          href={`/modulos/${slug}`}
+          className="mt-5 rounded-xl bg-[#16834E] px-5 py-3 text-sm font-bold text-white"
+        >
+          Voltar ao módulo
+        </Link>
+      </main>
+    );
+  }
+
+  if (finalizado) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-[#F7FAF7] px-5 pb-8 pt-6">
         <div className="flex flex-1 flex-col justify-center">
@@ -68,45 +128,52 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
             </h1>
 
             <p className="mt-3 text-sm leading-6 text-[#65756C]">
-              Você acertou {acertos} de {quiz.questoes.length} questões.
+              Você acertou {acertos} de {questoes.length} questões.
             </p>
 
-            <div className="mt-6 rounded-xl bg-[#EAF4ED] p-4">
-              <p className="text-sm font-semibold text-[#176B48]">
-                Recompensa pela conclusão
-              </p>
+            {possuiRecompensas && (
+              <div className="mt-6 rounded-xl bg-[#EAF4ED] p-4">
+                {quiz.recompensaConclusaoXP > 0 && (
+                  <>
+                    <p className="text-sm font-semibold text-[#176B48]">
+                      Recompensa pela conclusão
+                    </p>
 
-              <p className="mt-2 text-2xl font-bold text-[#16834E]">
-                +{quiz.recompensaConclusaoXP} XP
-              </p>
+                    <p className="mt-2 text-2xl font-bold text-[#16834E]">
+                      +{quiz.recompensaConclusaoXP} XP
+                    </p>
+                  </>
+                )}
 
-              {bonusConquistado && (
-                <p className="mt-3 text-sm font-bold text-[#16834E]">
-                  Bônus por desempenho: +{quiz.recompensaBonusXP} XP
-                </p>
-              )}
+                {quiz.recompensaBonusXP > 0 && bonusConquistado && (
+                  <p className="mt-3 text-sm font-bold text-[#16834E]">
+                    Bônus por desempenho: +{quiz.recompensaBonusXP} XP
+                  </p>
+                )}
 
-              {!bonusConquistado && (
-                <p className="mt-3 text-xs leading-5 text-[#65756C]">
-                  Para conquistar o bônus, era necessário acertar pelo menos{" "}
-                  {quiz.minimoAcertosBonus} questões.
-                </p>
-              )}
+                {quiz.recompensaBonusXP > 0 && !bonusConquistado && (
+                  <p className="mt-3 text-xs leading-5 text-[#65756C]">
+                    Para conquistar o bônus, era necessário acertar pelo
+                    menos {quiz.minimoAcertosBonus} questões.
+                  </p>
+                )}
 
-              <div className="mt-4 border-t border-[#D8E5DC] pt-3">
-                <p className="text-sm font-semibold text-[#176B48]">
-                  Total conquistado
-                </p>
-                <p className="mt-1 text-3xl font-bold text-[#16834E]">
-                  +{totalXP} XP
-                </p>
+                <div className="mt-4 border-t border-[#D8E5DC] pt-3">
+                  <p className="text-sm font-semibold text-[#176B48]">
+                    Total conquistado
+                  </p>
+
+                  <p className="mt-1 text-3xl font-bold text-[#16834E]">
+                    +{totalXP} XP
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
         <Link
-          href={`/modulos/${slug}/dia/7`}
+          href={`/modulos/${slug}/dia/${proximaEtapa}`}
           className="mt-6 block w-full rounded-xl bg-[#16834E] py-4 text-center text-sm font-bold text-white transition hover:bg-[#126B40]"
         >
           Ir para a próxima etapa
@@ -118,16 +185,16 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-[#F7FAF7] px-5 pb-8 pt-6">
       <Link
-        href={`/modulos/${slug}/dia/5`}
+        href={`/modulos/${slug}/dia/${diaAnterior}`}
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-[#176B48]"
       >
         <span aria-hidden="true">←</span>
-        Voltar ao vídeo
+        {ehModulo7 ? "Voltar à leitura" : "Voltar ao vídeo"}
       </Link>
 
       <div className="mb-5">
         <span className="inline-flex rounded-full bg-[#E5F2EA] px-3 py-1.5 text-xs font-semibold text-[#176B48]">
-          Dia 6
+          Dia {numeroDia}
         </span>
 
         <h1 className="mt-4 text-2xl font-bold leading-tight text-[#153D2D]">
@@ -142,16 +209,24 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
       <div className="mb-5">
         <div className="mb-2 flex justify-between text-xs font-semibold text-[#65756C]">
           <span>
-            Questão {indiceQuestao + 1} de {quiz.questoes.length}
+            Questão {indiceQuestao + 1} de {questoes.length}
           </span>
-          <span>{Math.round(((indiceQuestao + 1) / quiz.questoes.length) * 100)}%</span>
+
+          <span>
+            {Math.round(
+              ((indiceQuestao + 1) / questoes.length) * 100
+            )}
+            %
+          </span>
         </div>
 
         <div className="h-2 overflow-hidden rounded-full bg-[#E4EBE5]">
           <div
             className="h-full rounded-full bg-[#16834E] transition-all"
             style={{
-              width: `${((indiceQuestao + 1) / quiz.questoes.length) * 100}%`,
+              width: `${
+                ((indiceQuestao + 1) / questoes.length) * 100
+              }%`,
             }}
           />
         </div>
@@ -175,11 +250,18 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
                 "border-[#E4EBE5] bg-white text-[#344B3D] hover:border-[#A8CBB4]";
 
               if (respostaConfirmada && correta) {
-                estilo = "border-[#16834E] bg-[#EAF4ED] text-[#176B48]";
-              } else if (respostaConfirmada && selecionada && !correta) {
-                estilo = "border-[#D97757] bg-[#FFF1EC] text-[#9A432B]";
+                estilo =
+                  "border-[#16834E] bg-[#EAF4ED] text-[#176B48]";
+              } else if (
+                respostaConfirmada &&
+                selecionada &&
+                !correta
+              ) {
+                estilo =
+                  "border-[#D97757] bg-[#FFF1EC] text-[#9A432B]";
               } else if (selecionada) {
-                estilo = "border-[#16834E] bg-[#EAF4ED] text-[#176B48]";
+                estilo =
+                  "border-[#16834E] bg-[#EAF4ED] text-[#176B48]";
               }
 
               return (
@@ -187,15 +269,20 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
                   key={alternativa.letra}
                   type="button"
                   disabled={respostaConfirmada}
-                  onClick={() => setRespostaSelecionada(alternativa.letra)}
+                  onClick={() =>
+                    setRespostaSelecionada(alternativa.letra)
+                  }
                   className={`w-full rounded-xl border p-4 text-left text-sm leading-6 transition ${estilo} ${
-                    respostaConfirmada ? "cursor-default" : "cursor-pointer"
+                    respostaConfirmada
+                      ? "cursor-default"
+                      : "cursor-pointer"
                   }`}
                 >
                   <span className="flex items-start gap-3">
                     <span className="font-bold">
                       {alternativa.letra}.
                     </span>
+
                     <span>{alternativa.texto}</span>
                   </span>
                 </button>
@@ -240,7 +327,7 @@ export default function QuizDia({ quiz, slug }: QuizDiaProps) {
           onClick={avancarQuestao}
           className="mt-6 w-full rounded-xl bg-[#16834E] py-4 text-sm font-bold text-white transition hover:bg-[#126B40]"
         >
-          {indiceQuestao === quiz.questoes.length - 1
+          {indiceQuestao === questoes.length - 1
             ? "Ver resultado"
             : "Próxima questão"}
         </button>
