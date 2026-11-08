@@ -1,24 +1,51 @@
 @import "tailwindcss";
 
+/* Cores principais da identidade visual */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --primary: #087a43;
+  --primary-dark: #073124;
+  --secondary: #099186;
+
+  --light-green: #eaf6ed;
+  --light-gray: #f0f1ef;
+  --medium-gray: #dadbd6;
+  --text-gray: #606060;
+
+  /* Cores dos seis pilares */
+  --pillar-alimentacao: #25834a;
+  --pillar-atividade: #1689bd;
+  --pillar-sono: #6650a5;
+  --pillar-estresse: #d99c00;
+  --pillar-adicoes: #d85a43;
+  --pillar-conexoes: #15958d;
 }
 
+/* Disponibiliza as cores como classes do Tailwind */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+
+  --color-light-green: var(--light-green);
+  --color-light-gray: var(--light-gray);
+  --color-medium-gray: var(--medium-gray);
+  --color-text-gray: var(--text-gray);
+
+  --color-pillar-alimentacao: var(--pillar-alimentacao);
+  --color-pillar-atividade: var(--pillar-atividade);
+  --color-pillar-sono: var(--pillar-sono);
+  --color-pillar-estresse: var(--pillar-estresse);
+  --color-pillar-adicoes: var(--pillar-adicoes);
+  --color-pillar-conexoes: var(--pillar-conexoes);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Estilos gerais */
 body {
   background: var(--background);
   color: var(--foreground);
