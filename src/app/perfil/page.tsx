@@ -116,10 +116,23 @@ export default function Perfil() {
             Configurações
           </h2>
 
-          <div className="rounded-2xl border border-medium-gray/60 bg-white p-4 shadow-sm">
-            <p className="text-sm leading-relaxed text-text-gray">
-              Novas opções de configuração estarão disponíveis em breve.
-            </p>
+          <div className="overflow-hidden rounded-2xl border border-medium-gray/60 bg-white shadow-sm">
+            <Link
+              href="/termos/consulta"
+              className="flex items-center justify-between p-4 transition-colors hover:bg-light-green"
+            >
+              <div>
+                <h3 className="font-semibold text-primary-dark">
+                  Termos de Uso e Política de Privacidade
+                </h3>
+
+                <p className="mt-1 text-sm text-text-gray">
+                  Consulte os termos do aplicativo.
+                </p>
+              </div>
+
+              <span className="ml-3 text-xl text-primary">→</span>
+            </Link>
           </div>
         </section>
 
